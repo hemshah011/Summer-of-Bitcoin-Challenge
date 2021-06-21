@@ -27,9 +27,37 @@ const parse_csv = parse({ delimiter: "," }, (err, data) => {
             //console.log(txn)
             ans.push(txn);
         });
-        ans.sort((a, b) => b.maxbymin- a.maxbymin);
+        ans.sort((a, b) => b.maxbymin - a.maxbymin);
         //console.log(ans)
-        
+
+        const block = [], maxwt = 4000000;
+        let wt = 0, fee = 0;
+        for (i = 1; i < ans.length; i++) {
+            if (ans[i].weight < maxwt - wt) {
+                //If txn already added
+                if (block.includes(ans[i].tx_id)) {
+                    continue;
+                }
+                //If parent exists add parent
+                if (ans[i].parent) {
+                    ans[i].parent.map((txn) => {
+                        if (txn.weight <= maxwt - wt) {
+                            wt += parseInt(txn.weight);
+                            fee += parseInt(txn.fee);
+                            block.push(txn.tx_id);
+                        }
+                    });
+                }
+                //Add anyway
+                block.push(ans[i].tx_id);
+                wt += parseInt(ans[i].weight);
+                fee += parseInt(ans[i].fee);
+            }
+            else {
+                break;
+            }
+        }
+        console.log(block);
     })
 })
 
