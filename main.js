@@ -17,15 +17,19 @@ const parse_csv = parse({ delimiter: "," }, (err, data) => {
             txn.tx_id = listItem[0];
             txn.fee = listItem[1];
             txn.weight = listItem[2];
+            txn.maxbymin = txn.fee / txn.weight;
             txn.parent = [];
             let i = 3;
             while (listItem[i]) {
                 txn.parent.push(listItem[i]);
                 i++;
             }
-            console.log(txn)
+            //console.log(txn)
             ans.push(txn);
         });
+        ans.sort((a, b) => b.maxbymin- a.maxbymin);
+        //console.log(ans)
+        
     })
 })
 
