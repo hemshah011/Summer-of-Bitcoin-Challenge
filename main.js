@@ -57,7 +57,15 @@ const parse_csv = parse({ delimiter: "," }, (err, data) => {
                 break;
             }
         }
-        console.log(block);
+        //Mined Block
+        //console.log(block);
+
+        //https://www.tabnine.com/code/javascript/functions/fs/writeFile 
+        //Write file to txt
+        fs.writeFile("block.txt", block.join("\n"), (err) => {
+            // In case of a error throw err.
+            if (err) throw err;
+        });
     })
 })
 
